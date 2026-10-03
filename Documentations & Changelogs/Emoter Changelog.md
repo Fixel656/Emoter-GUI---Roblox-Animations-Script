@@ -1,3 +1,10 @@
+### V5.55:
+- Added local launches counter which may be used later
+- Now you will be notificated if you are using newer version
+- Made minimized frame smaller. Also it becomes half-transparent after 7 seconds if you're not interacting with it
+- Reduced the gaps between the buttons and made the buttons themselves larger
+- Fixed some visual glitches happening when restarting gui
+
 ### V5.51:
 - Changed AddAnimation button: now it has a "+" sign in corner instead of pen
 - Made hints for AddAnimation button more clear
