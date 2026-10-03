@@ -7,12 +7,12 @@
 **(5k+ of new users! Thank you for using my script!)**
 </div>
 
-- [FAQ](https://github.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/blob/main/Documentations%20%26%20Changelogs/FAQ.md)
-- [Wiki](https://github.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/wiki)
-- [SGA Wiki](https://github.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/wiki/SpecificGameAnimations-and-how-to-make-your-own-SGA)
-- [List of games with SpecificGameAnimations](https://github.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/blob/main/SpecificGameAnimations/Games%20list.md)
-- [Emoter Changelog](https://github.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/blob/main/Documentations%20%26%20Changelogs/Emoter%20Changelog.md)
-- [AnimIdDetector Changelog](https://github.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/blob/main/Documentations%20%26%20Changelogs/AnimId%20Detector%20Changelog.md)
+- [FAQ](https://github.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/blob/main/Documentations%20%26%20Changelogs/FAQ.md)
+- [Wiki](https://github.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/wiki)
+- [SGA Wiki](https://github.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/wiki/SpecificGameAnimations-and-how-to-make-your-own-SGA)
+- [List of games with SpecificGameAnimations](https://github.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/blob/main/SpecificGameAnimations/Games%20list.md)
+- [Emoter Changelog](https://github.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/blob/main/Documentations%20%26%20Changelogs/Emoter%20Changelog.md)
+- [AnimIdDetector Changelog](https://github.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/blob/main/Documentations%20%26%20Changelogs/AnimId%20Detector%20Changelog.md)
 <br>
 
 **Emoter** is a FE GUI with a lot of animations you can play while moving, sitting or other things. This GUI doesn't give you any Advantages and made to have fun.<br>
@@ -38,8 +38,8 @@ Dance without any problems and restrictions!<br>
 - Other color themes
 - Ability to use animation by entering its ID
 - Added SGA - SpecificGameAnimations: file with Animations for specific games. It will be places with emotes available in these places specifically.<br/>
-I will add it manually and type available ones in README. Also you can add files for yourself in your files folder. More information [here](https://github.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/wiki/SpecificGameAnimations-and-how-to-make-your-own-SGA). <br/>
-(You can add your SGA in [Discussions](https://github.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/discussions/categories/your-sga-specific-game-animations) so i can add it to Github)<br/>
+I will add it manually and type available ones in README. Also you can add files for yourself in your files folder. More information [here](https://github.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/wiki/SpecificGameAnimations-and-how-to-make-your-own-SGA). <br/>
+(You can add your SGA in [Discussions](https://github.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/discussions/categories/your-sga-specific-game-animations) so i can add it to Github)<br/>
 - "Running" and "Idle" types for animations. "Running" type will change AnimationSpeed depending on the character's speed and stop when character isn't moving (staying). "Idle" type will play whed you're staying. It has a lot of configurations, so check more info on how to use it in my Wiki
 - Emote wheel (Activate by <kbd>,</kbd> button. You can't edit emotes for it in Gui itself (at least for now), You'll need to edit files in EmoterData folder.
 - Hotkeys with Double hotkey support
@@ -61,7 +61,7 @@ I will add it manually and type available ones in README. Also you can add files
 
 - Script:
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/refs/heads/main/AnimationIdDetector.lua",true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/refs/heads/main/AnimationIdDetector.lua",true))()
 ```
 
 <img width="488" height="294" alt="image" src="https://github.com/user-attachments/assets/707e7d25-17d2-4ebe-9172-6c36988fab24" /> <img width="487" height="294" alt="image" src="https://github.com/user-attachments/assets/0c2901da-9b65-4c95-a884-cef52aaa7af5" />
