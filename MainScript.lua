@@ -14,7 +14,7 @@ local IsInStudio = game:GetService("RunService"):IsStudio()
 local UserInputService = game:GetService("UserInputService")
 local HttpService = game:GetService("HttpService")
 local ContextActionService = game:GetService("ContextActionService")
-print("Script by Fixel656, based on Energize GUI by illremember. Do not copy and do not claim as your own!")
+print("--- Script by Fixel656, based on Energize GUI by illremember. Do not copy and do not claim as your own! ---")
 print("Script version: "..ScriptVersion)
 print("Game Id: "..game.GameId)
 
@@ -78,29 +78,26 @@ ResetCharHotkey.Value = "DoubleR"
 DoubleHotkey.Value = "LeftControl" --A secondary key for activating a DoubleHotkey
 EmoteWheelHotkey.Value = "Comma" --Not affected by "Hotkeys Enabled" setting
 
+if AnalyticsEnabled and not IsInStudio then task.spawn(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/refs/heads/main/Documentations%20%26%20Changelogs/CountHandler.lua",true))() end) end
+-- P.S. This CountHandler made to see how many people are using this script and does NOT collect any other data. BUT if you let AnalyticsEnabled setting enabled you will get rid of one bug where specific settings couldn't load on first script execution
 --Loading & Saving
 local IsDefaultSettings = true
 local ConfigFile = "EmoterData/EmoterConfig.json"
-if not IsInStudio then	
+if not IsInStudio then
 	local targetNumber = tostring(game.GameId)
 	local folderPath = "EmoterData/SpecificSettings"
 	local fileFound = false
 
 	local success, files = pcall(listfiles, folderPath)
-	print(1)
 	if not success then
-		print(2)
 		return
 	end
 	for _, filePath in ipairs(files) do
-		print(3)
 		local fileName = filePath:match("[^/\\]+$") or filePath
 		local extractedNumber = fileName:match("(%d+)")
 
 		if extractedNumber then
-			print(4)
 			if extractedNumber == targetNumber then
-				print(5)
 				fileFound = true
 				ConfigFile = filePath
 				IsDefaultSettings = false
@@ -266,9 +263,6 @@ local function SaveData(Type)
 		writefile("EmoterData/EmoterConfig.json", UpdatedData)
 	end
 end
-
-if AnalyticsEnabled and not IsInStudio then task.spawn(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/refs/heads/main/Documentations%20%26%20Changelogs/CountHandler.lua",true))() end) end
--- P.S. This CountHandler made to see how many people are using this script and does NOT collect any other data
 
 local BgColor = Color3.fromRGB(137, 165, 255)
 local ScrollBgColor = Color3.fromRGB(240, 255, 255)
@@ -3300,7 +3294,7 @@ local function CreateGui()
 		end
 	end)
 	local AnalyticsButton = SettingsStuff.AnalyticsOption
-	AddHoverText(AnalyticsButton, "<b>DISCLAIMER</b>: these analytics are made only to see NUMBER of people using my script. I don't save or even share any personal data, UserId, Username and any other data")
+	AddHoverText(AnalyticsButton, "<b>DISCLAIMER</b>: these analytics are made only to see NUMBER of people using my script. I don't save or even share any personal data, UserId, Username and any other data. <b>IF</b> you let AnalyticsEnabled setting enabled you will get rid of one bug where specific settings couldn't load on first script execution")
 	AnalyticsButton.MouseButton1Click:Connect(function()
 		AnalyticsEnabled = not AnalyticsEnabled
 		if AnalyticsEnabled == true then
@@ -3797,6 +3791,7 @@ local function CreateGui()
 	end)
 
 	ResetButton.MouseButton1Click:Connect(function()
+		print("--- Restarting Emoter GUI... ---")
 		game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Restarting", Text = "Restarting Gui...", Duration = 3})
 		table.clear(RestartAnimations)
 		StopAnimsEvent:Fire("Reset/Destroy")
