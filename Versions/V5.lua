@@ -116,7 +116,7 @@ if not IsInStudio then
 	end
 end
 
-if AnalyticsEnabled and not IsInStudio then task.spawn(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/refs/heads/main/Documentations%20%26%20Changelogs/CountHandler.lua",true))() end) end
+if AnalyticsEnabled and not IsInStudio then task.spawn(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/refs/heads/main/Documentations%20%26%20Changelogs/CountHandler.lua",true))() end) end
 -- P.S. This CountHandler made to see how many people are using this script and does NOT collect any other data
 
 local BgColor = Color3.fromRGB(137, 165, 255)
@@ -3068,7 +3068,7 @@ local function CreateGui()
 	end)
 
 	LaunchIdDetectorButton.MouseButton1Click:Connect(function()
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/refs/heads/main/AnimationIdDetector.lua",true))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/refs/heads/main/AnimationIdDetector.lua",true))()
 	end)
 
 	ResetButton.MouseButton1Click:Connect(function()
@@ -3081,7 +3081,7 @@ local function CreateGui()
 	end)
 
 	GithubLinkButton.MouseButton1Click:Connect(function()
-		setclipboard("https://github.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/tree/main")
+		setclipboard("https://github.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/tree/main")
 		game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Copied", Text = "Copied link to your clipboard!", Duration = 3})
 	end)
 
@@ -3670,7 +3670,7 @@ local function CreateGui()
 	local function AdditionalAnimsOperation()
 		print("[AdditionalAnims File]: Adding animations from AdditionalAnims file in Github")
 		
-		local finalUrl = "https://raw.githubusercontent.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/refs/heads/main/SpecificGameAnimations/AdditionalAnimations"
+		local finalUrl = "https://raw.githubusercontent.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/refs/heads/main/SpecificGameAnimations/AdditionalAnimations"
 
 		local success, fileContent = pcall(function()
 			return game:HttpGet(finalUrl)
@@ -3779,7 +3779,7 @@ local function CreateGui()
 	end
 
 	local function GithubSpecGameAnimsOperation()
-		local baseUrl = "https://raw.githubusercontent.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/refs/heads/main/SpecificGameAnimations/"
+		local baseUrl = "https://raw.githubusercontent.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/refs/heads/main/SpecificGameAnimations/"
 		local finalUrl = baseUrl .. tostring(game.GameId)
 
 		print("[SpecGameAnims Github]: Searching Anims file in Github for game ".. game.GameId)
