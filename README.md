@@ -21,7 +21,7 @@ Dance without any problems and restrictions!<br>
 
 - Script:
 ```lua
- loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/refs/heads/main/MainScript.lua",true))()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/refs/heads/main/MainScript.lua",true))()
 ```
 <br>
 <img width="548" height="354" alt="image" src="https://github.com/user-attachments/assets/485b95cf-0898-487a-aa8b-b3205c4f5fa0" /><br>
