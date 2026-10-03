@@ -2,8 +2,10 @@
 DO NOT COPY AND CLAIM AS YOUR OWN, if you are using some of the script for your own, 
 credit is highly appreciated!]]
 
-local ScriptVersion = 5.51
-local LastUsedVersion = 5.51 --Unused for now
+local ScriptVersion = 5.55
+local LastUsedVersion = ScriptVersion
+local LaunchedTimes = 0
+local TotalTimeUsed = 0 --Unused for now, i'm not even sure i can make this feature working right
 local GuiActive = true
 local GuiEmoter = nil
 local AnimationHandler = "Animate"
@@ -85,15 +87,20 @@ if not IsInStudio then
 	local fileFound = false
 
 	local success, files = pcall(listfiles, folderPath)
+	print(1)
 	if not success then
+		print(2)
 		return
 	end
 	for _, filePath in ipairs(files) do
+		print(3)
 		local fileName = filePath:match("[^/\\]+$") or filePath
 		local extractedNumber = fileName:match("(%d+)")
 
 		if extractedNumber then
+			print(4)
 			if extractedNumber == targetNumber then
+				print(5)
 				fileFound = true
 				ConfigFile = filePath
 				IsDefaultSettings = false
@@ -102,12 +109,18 @@ if not IsInStudio then
 			end
 		end
 	end
-
+	
+	if isfile("EmoterData/EmoterConfig.json") then
+		local rawData = readfile("EmoterData/EmoterConfig.json")
+		local DecodedSettings = HttpService:JSONDecode(rawData)
+		if DecodedSettings.ConfLastUsedVersion then LastUsedVersion = tonumber(DecodedSettings.ConfLastUsedVersion) else LastUsedVersion = 5.5 end
+		if DecodedSettings.ConfLaunchedTimes then LaunchedTimes = tonumber(DecodedSettings.ConfLaunchedTimes) end
+		if DecodedSettings.ConfTotalTimeUsed then TotalTimeUsed = tonumber(DecodedSettings.ConfTotalTimeUsed) end
+	end
 	if isfile(ConfigFile) then
 		local rawData = readfile(ConfigFile)
 		local DecodedSettings = HttpService:JSONDecode(rawData)
-
-		-- Accessing the loaded data
+		
 		AnimPreviewEnabled = DecodedSettings.ConfAnimPreviewEnabled
 		DebugInfoEnabled = DecodedSettings.ConfDebugInfoEnabled
 		AnalyticsEnabled = DecodedSettings.ConfAnalyticsEnabled
@@ -158,6 +171,10 @@ end
 
 local function SaveData(Type)
 	local SettingsToSave = {
+		ConfLastUsedVersion = ScriptVersion,
+		ConfLaunchedTimes = LaunchedTimes,
+		ConfTotalTimeUsed = TotalTimeUsed,
+		
 		ConfAnimPreviewEnabled = AnimPreviewEnabled,
 		ConfDebugInfoEnabled = DebugInfoEnabled,
 		ConfAnalyticsEnabled = AnalyticsEnabled,
@@ -237,6 +254,16 @@ local function SaveData(Type)
 
 		writefile(ConfigFile, encodedData)
 		game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Saved", Text = "Succesfully saved settings for specific game!", Duration = 3})
+	elseif Type == "Update" then
+		local rawData = readfile("EmoterData/EmoterConfig.json")
+		local DecodedData = HttpService:JSONDecode(rawData)
+		
+		DecodedData.ConfLaunchedTimes = LaunchedTimes + 1
+		DecodedData.ConfLastUsedVersion = ScriptVersion
+		DecodedData.ConfTotalTimeUsed = TotalTimeUsed
+		
+		local UpdatedData = HttpService:JSONEncode(DecodedData)
+		writefile("EmoterData/EmoterConfig.json", UpdatedData)
 	end
 end
 
@@ -248,7 +275,7 @@ local ScrollBgColor = Color3.fromRGB(240, 255, 255)
 local UiButColor = Color3.new(0, 0, 0) -- Color of GUI's buttons and Texts
 local TextBgColor = Color3.fromRGB(255, 255, 255)
 local ButtonCol = Color3.fromRGB(192, 191, 211) -- R6 Button Color
-local ButtonSelectCol = Color3.fromRGB(255, 255, 255) -- R6 Button darker color (idk how to make it just darker BgColor yet)
+local ButtonSelectCol = Color3.fromRGB(255, 255, 255) -- R6 Button lighter color (idk how to make it just darker BgColor yet)
 
 --Restart Values
 local FirstLaunch = true
@@ -374,6 +401,7 @@ local function CreateGui()
 	local AddedDataInfo = Instance.new("StringValue")
 	local NegativeNumber = 1
 	local DefaultWalkSpeed = 16
+	local SFHideTimeCount = 0
 	local Humanoid = nil
 	local ClonedChar = nil
 	local RigType = nil
@@ -396,7 +424,7 @@ local function CreateGui()
 	local MFUIScale = Instance.new("UIScale", MainFrame)
 	ViewportFrame = Instance.new("ViewportFrame") --Frame with animation preview
 
-	SideFrame = Instance.new("Frame") --Visible when GUI is closed
+	SideFrame = Instance.new("CanvasGroup") --Visible when GUI is closed
 	local SFUIScale = Instance.new("UIScale", SideFrame)
 	SideFrameTitle = Instance.new("TextLabel")
 	OpenGUI = Instance.new("ImageButton")
@@ -690,7 +718,7 @@ local function CreateGui()
 
 		Button.BackgroundColor3 = ButtonCol
 		Button.FontFace.Weight = Enum.FontWeight.Bold
-		Button.Size = UDim2.new(0, 100, 0, 30)
+		Button.Size = UDim2.new(0, 104, 0, 30)
 		Button.TextColor3 = UiButColor
 		Button.RichText = true
 		Button.Font = Enum.Font.Roboto
@@ -898,6 +926,7 @@ local function CreateGui()
 					while wait() do
 						if track.TimePosition >= Number then
 							track:AdjustSpeed(0)
+							track.TimePosition = Number
 							if DebugInfoEnabled then print("Paused at "..track.TimePosition) end
 							AnimSpeed = 0
 							return
@@ -1531,7 +1560,7 @@ local function CreateGui()
 		local TextLabel = Instance.new("TextLabel")
 
 		DivideFrame.Name = "DivideFrame"
-		DivideFrame.Size = UDim2.new(0.98, 0, 0, 15)
+		DivideFrame.Size = UDim2.new(0.98, 0, 0, 18)
 		DivideFrame.BackgroundTransparency = 1
 		DivideFrame.LayoutOrder = LayoutOrder
 
@@ -1608,6 +1637,7 @@ local function CreateGui()
 	Emoter.Name = "Emoter"
 	Emoter.ResetOnSpawn = false
 	Emoter.IgnoreGuiInset = true
+	Emoter.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	if IsInStudio then --Made this as i test script mostly in Studio
 		Emoter.Parent = game.Players.LocalPlayer.PlayerGui
 		Emoter.DisplayOrder = 100
@@ -1628,7 +1658,7 @@ local function CreateGui()
 	SideFrame.Parent = Emoter
 	SideFrame.Active = true
 	SideFrame.BackgroundColor3 = BgColor
-	SideFrame.Size = UDim2.new(0, 225, 0, 32)
+	SideFrame.Size = UDim2.new(0, 215, 0, 28)
 	SideFrame.Visible = false
 	SideFrame.Position = UDim2.new(0, 10, 0, 10)
 
@@ -1643,25 +1673,25 @@ local function CreateGui()
 	SideFrameTitle.AnchorPoint = Vector2.new(0.5, 0.5)
 	SideFrameTitle.BackgroundTransparency = 1
 	SideFrameTitle.Position = UDim2.new(0.5, 0, 0.5, 0)
-	SideFrameTitle.Size = UDim2.new(0, 0, 0, 31)
+	SideFrameTitle.Size = UDim2.new(0, 0, 0, 28)
 	SideFrameTitle.Font = Enum.Font.SourceSansBold
 	SideFrameTitle.TextColor3 = Color3.new(1, 1, 1)
 	SideFrameTitle.Text = "Emote GUI"
-	SideFrameTitle.TextSize = 24
+	SideFrameTitle.TextSize = 22
 	SideFrameTitle.TextStrokeTransparency = 0
 
-	SFDestroyGUI.Name = "DestroyGUI"
+	SFDestroyGUI.Name = "SFDestroyGUI"
 	SFDestroyGUI.Parent = SideFrame
 	SFDestroyGUI.AnchorPoint = Vector2.new(1, 0.5)
 	SFDestroyGUI.BorderSizePixel = 0
 	SFDestroyGUI.Position = UDim2.new(1, 0, 0.5, 0)
-	SFDestroyGUI.Size = UDim2.new(0, 32, 0, 32)
+	SFDestroyGUI.Size = UDim2.new(0, 28, 0, 28)
 	SFDestroyGUI.BackgroundColor3 = BgColor
 	SFDestroyGUI.Font = Enum.Font.FredokaOne
 	SFDestroyGUI.Text = "X"
 	SFDestroyGUI.TextColor3 = UiButColor
 	SFDestroyGUI.TextSize = 34
-	SFDestroyGUI.TextWrapped = true
+	SFDestroyGUI.TextScaled = true
 	AddHoverText(SFDestroyGUI, "Delete GUI")
 
 	OpenGUI.Name = "OpenGUI"
@@ -1670,7 +1700,7 @@ local function CreateGui()
 	OpenGUI.BorderSizePixel = 0
 	OpenGUI.BackgroundColor3 = BgColor
 	OpenGUI.Position = UDim2.new(0, 0, 0.5, 0)
-	OpenGUI.Size = UDim2.new(0, 32, 0, 32)
+	OpenGUI.Size = UDim2.new(0, 28, 0, 28)
 	OpenGUI.Image = "rbxassetid://101249930107274"
 	OpenGUI.ImageColor3 = UiButColor
 	AddHoverText(OpenGUI, "Open/Close GUI", CloseHotkey)
@@ -1844,7 +1874,7 @@ local function CreateGui()
 	SF6UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 	SF6UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	SF6UIListLayout.Wraps = true
-	SF6UIListLayout.Padding = UDim.new(0, 10)
+	SF6UIListLayout.Padding = UDim.new(0, 7)
 
 	ScrollingFrameR15.Name = "ScrollingFrameR15"
 	ScrollingFrameR15.Parent = MainFrame
@@ -1863,7 +1893,7 @@ local function CreateGui()
 	SF15UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 	SF15UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	SF15UIListLayout.Wraps = true
-	SF15UIListLayout.Padding = UDim.new(0, 10)
+	SF15UIListLayout.Padding = UDim.new(0, 7)
 
 	ScrollingFrameSpecific.Name = "ScrollingFrameSpecific"
 	ScrollingFrameSpecific.Parent = MainFrame
@@ -1882,7 +1912,7 @@ local function CreateGui()
 	SFSpecListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 	SFSpecListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	SFSpecListLayout.Wraps = true
-	SFSpecListLayout.Padding = UDim.new(0, 10)
+	SFSpecListLayout.Padding = UDim.new(0, 7)
 
 
 	--Options Frame
@@ -2832,6 +2862,10 @@ local function CreateGui()
 			game.TweenService:Create(MFUIScale, TweenInfo.new(.15, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {Scale = 1}):Play()
 			SFUIScale.Scale = 1.2
 		end
+		
+		SFHideTimeCount = 0
+		SideFrame.GroupTransparency = 0
+		SideFrame.UIStroke.Transparency = 0
 	end
 
 	local function OpenSettingsFunction()
@@ -2943,6 +2977,22 @@ local function CreateGui()
 		Title.Text = "Emoter GUI (R6)"
 		SideFrameTitle.Text = "Emoter GUI (R6)"
 	end
+	
+	task.spawn(function()
+		while GuiActive and not GuiRestarted do
+			SFHideTimeCount = SFHideTimeCount + 1
+			if SFHideTimeCount == 7 and SideFrame.Visible == true then
+				SideFrame.GroupTransparency = 0.5
+				SideFrame.UIStroke.Transparency = 0.5
+			end
+			wait(1)
+		end
+	end)
+	SideFrame.MouseMoved:Connect(function()
+		SFHideTimeCount = 0
+		SideFrame.GroupTransparency = 0
+		SideFrame.UIStroke.Transparency = 0
+	end)
 
 	SpeedValue:GetPropertyChangedSignal("Text"):Connect(function()
 		SpeedNum = SpeedValue.Text 
@@ -4755,7 +4805,7 @@ local function CreateGui()
 	local UiCornerParts = {"SpecGameSection", "DefaultSection", "Emote1", "Emote2", "Emote3", "Emote4", "Emote5", "Emote6", "Emote7", "Emote8", "ResetButton", "CustomAnimFrame", "PlayAnimButton", "CustomAnimButton", "HotkeysEditOption", "SaveSettingsButton", "LaunchIdDetectorButton", "GithubLinkButton", "HotkeysFrame", "SettingsFrame", "SettingsButton", "GuiTopFrame", "CloseGUI", "DestroyGUI", "GuiBottomFrame", "SpeedValue", "SideFrame", "OpenGUI", "ViewportFrame", "OptionsFrame", "PauseAnimsButton", "StopDefAnimsButton", "PauseAnimateButton", "SitButton", "EmoteWheelButton", "ReversePlayButton", "SearchFrame", "SearchButton"}
 	local UiStrokeParts = {"SpecGameSection", "DefaultSection", "Emote1", "Emote2", "Emote3", "Emote4", "Emote5", "Emote6", "Emote7", "Emote8", "CustomAnimFrame", "HotkeysFrame", "SettingsFrame", "GuiTopFrame", "GuiBottomFrame", "SideFrame", "ScrollingFrame", "ScrollingFrameR15", "ScrollingFrameSpecific", "OptionsFrame", "SearchFrame"}
 	local UiStroke1Parts = {"ResetButton", "PlayAnimButton", "IdBox", "HotkeysEditOption", "SaveSettingsButton", "LaunchIdDetectorButton", "GithubLinkButton", "SpeedValue", "SearchBox", "PauseAnimsButton", "StopDefAnimsButton", "PauseAnimateButton", "SitButton", "EmoteWheelButton", "ReversePlayButton"}
-	local UiGradientParts = {"SpecGameSection", "DefaultSection", "Emote1", "Emote2", "Emote3", "Emote4", "Emote5", "Emote6", "Emote7", "Emote8", "CustomAnimBackButton", "BackButton", "CustomAnimFrame", "PlayAnimButton", "CustomAnimButton", "SettingsButton", "GuiTopFrame", "GuiBottomFrame", "SideFrame", "SettingsButton", "DestroyGUI", "CloseGUI", "OpenGUI", "OptionsButton", "PauseAnimsButton", "StopDefAnimsButton", "PauseAnimateButton", "SitButton", "EmoteWheelButton", "ReversePlayButton", "SearchFrame", "SearchButton", "BackButton"}
+	local UiGradientParts = {"SpecGameSection", "DefaultSection", "Emote1", "Emote2", "Emote3", "Emote4", "Emote5", "Emote6", "Emote7", "Emote8", "CustomAnimBackButton", "BackButton", "CustomAnimFrame", "PlayAnimButton", "CustomAnimButton", "SettingsButton", "GuiTopFrame", "GuiBottomFrame", "SideFrame", "SettingsButton", "DestroyGUI", "CloseGUI", "OptionsButton", "PauseAnimsButton", "StopDefAnimsButton", "PauseAnimateButton", "SitButton", "EmoteWheelButton", "ReversePlayButton", "SearchFrame", "SearchButton", "BackButton"}
 
 	for _, UiPart in ipairs(Emoter:GetDescendants()) do
 		if table.find(UiCornerParts, UiPart.Name) and UICornerEnabled then
@@ -4808,9 +4858,9 @@ local function CreateGui()
 	AddUiPadding("GuiBottomFrame",5,5)
 	AddUiPadding("SpeedValue",2,2)
 	AddUiPadding("CurAnimInfoTitle",0,0,1,5)
-	AddUiPadding("ScrollingFrame",5,16,7,10)
-	AddUiPadding("ScrollingFrameR15",5,16,7,10)
-	AddUiPadding("ScrollingFrameSpecific",5,16,7,10)
+	AddUiPadding("ScrollingFrame",5,16,5,6)
+	AddUiPadding("ScrollingFrameR15",5,16,5,6)
+	AddUiPadding("ScrollingFrameSpecific",5,16,5,6)
 	AddUiPadding("SearchBox",2,2)
 	AddUiPadding("SettingsStuff",5,8,3,5)
 	AddUiPadding("SwitchRunIdleExceptionOption", 20)
@@ -4834,26 +4884,11 @@ local function CreateGui()
 
 
 	--OnRestart things
-	if FirstLaunch then
-		MFUIScale.Scale = 0
-	end
-	Emoter.Enabled = true
-
-	SettingsFrame.Visible = true --Made this so HotkeysFrame will be scrollable even if you scroll SettingsFrame before opening HotkeysFrame. Idk why it happens
-	HotkeysFrame.Visible = true
-	wait()
-	SettingsFrame.Visible = false
-	HotkeysFrame.Visible = false
-	SettingsFrame.Position = MainFrame.Position + UDim2.new(0, 590, 0, 0)
-
 	if GuiPos ~= nil then
 		SideFrame.Position = GuiPos
 	end
 	if GuiPos ~= nil then
 		MainFrame.Position = GuiPos
-	end
-	if SettingsPos ~= nil then
-		SettingsFrame.Position = SettingsPos
 	end
 	if GuiClosed == true then
 		SideFrame.Visible = true
@@ -4904,9 +4939,24 @@ local function CreateGui()
 			end
 		end
 	end
-
 	if FirstLaunch then
 		game.TweenService:Create(MFUIScale, TweenInfo.new(.3, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {Scale = 1}):Play()
+	end
+	
+	if FirstLaunch then
+		MFUIScale.Scale = 0
+	end
+	Emoter.Enabled = true
+
+	SettingsFrame.Visible = true --Made this so HotkeysFrame will be scrollable even if you scroll SettingsFrame before opening HotkeysFrame. Idk why it happens
+	HotkeysFrame.Visible = true
+	wait()
+	SettingsFrame.Visible = false
+	HotkeysFrame.Visible = false
+	if SettingsPos ~= nil then
+		SettingsFrame.Position = SettingsPos
+	else
+		SettingsFrame.Position = MainFrame.Position + UDim2.new(0, 590, 0, 0)
 	end
 
 	GuiEmoter = Emoter
@@ -4997,6 +5047,7 @@ end
 
 game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Welcome to Emoter Gui!", Text = "Wait for script to load!", Duration = 5, Icon = "rbxassetid://87633233506740"})
 
+--Launching the whole thing
 local CreateGuiOk, result = pcall(function()
 	return CreateGui()
 end)
@@ -5006,4 +5057,12 @@ if not CreateGuiOk then
 	end
 	game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Fatal Error!", Text = "Check Dev Console for more info (F9)", Duration = 5})
 	warn("[FATAL ERROR]: "..result)
+else
+	game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Succesfully loaded!", Text = "Check Console for info (F9)", Duration = 5})
+	if LastUsedVersion < ScriptVersion then
+		game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Emoter Upated!", Text = "Check Chagelog in my Github", Duration = 5, Icon = "rbxassetid://5832745500"})
+	end
+end
+if not IsInStudio then
+	SaveData("Update")
 end
