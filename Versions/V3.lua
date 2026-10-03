@@ -1466,7 +1466,7 @@ local function CreateGui()
 	end)
 
 	LaunchIdDetectorButton.MouseButton1Click:Connect(function()
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/refs/heads/main/AnimationIdDetector.lua",true))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/refs/heads/main/AnimationIdDetector.lua",true))()
 	end)
 
 	ResetButton.MouseButton1Click:Connect(function()
@@ -1474,7 +1474,7 @@ local function CreateGui()
 	end)
 
 	GithubLinkButton.MouseButton1Click:Connect(function()
-		setclipboard("https://github.com/Fixel656/Roblox-Emotes-GUI-Script-R6-R15/tree/main")
+		setclipboard("https://github.com/Fixel656/Emoter-GUI_Roblox-Animations-Script/tree/main")
 		game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Copied", Text = "Copied link to your clipboard!", Duration = 3})
 	end)
 
