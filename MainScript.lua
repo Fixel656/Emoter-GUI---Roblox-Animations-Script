@@ -5055,7 +5055,7 @@ if not CreateGuiOk then
 else
 	game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Succesfully loaded!", Text = "Check Console for info (F9)", Duration = 5})
 	if LastUsedVersion < ScriptVersion then
-		game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Emoter Upated!", Text = "Check Chagelog in my Github", Duration = 5, Icon = "rbxassetid://5832745500"})
+		game:GetService("StarterGui"):SetCore("SendNotification", {Title = "Emoter Upated!", Text = "Check Changelog in my Github", Duration = 5, Icon = "rbxassetid://5832745500"})
 	end
 end
 if not IsInStudio then
